@@ -1,0 +1,54 @@
+body{
+    background-color: bisque;
+}
+.choice-container{
+    display: flex;
+    width: 100%;
+    background-color: white;
+    margin-bottom: 10px;
+    border: 1px solid rgb(24, 187, 187);
+}
+
+.choice-container:hover{
+    cursor: pointer;
+    box-shadow: 0 0.4rem 1.4rem 0 gainsboro;
+}
+.choice-prefix{
+    padding: 15px 15px;
+    border: 1px inset;
+    background-color: rgba(110, 110, 252, 0.557);
+}
+
+.choice-content{
+    padding: 15px 15px;
+    width: 100%;
+}
+
+.correct{
+    background-color: green;
+}
+
+.incorrect{
+    background-color: red;
+}
+
+#hud{
+    display: flex;
+    justify-content: space-between;
+    
+}
+.hud-prefix{
+    text-align: center;
+}
+
+#progressBar{
+    height: 20px;
+    width: 150px;
+    border: 1px solid rgb(24, 187, 187);
+}
+
+#progressBarFull{
+    height: 20px;
+    background-color:rgb(24, 187, 187) ;
+    width: 0%;
+}
