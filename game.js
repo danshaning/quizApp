@@ -1,10 +1,12 @@
 const question = document.getElementById("question");
 const choices = Array.from(document.getElementsByClassName("choice-content"));
 const correct_bonus = 10;
-const max_Questions = 3;
+const max_Questions = 4;
 const scoreText = document.getElementById("score");
 const progressText = document.getElementById("progressText");
 const progressBarFull = document.getElementById('progressBarFull');
+const loader = document.getElementById('loader');
+const game = document.getElementById('game');
 
 let currentQuestion = {};
 let acceptingAnswers = false;
@@ -14,12 +16,14 @@ let availableQuestions = [];
 
 let questions = [];
 
-fetch("https://opentdb.com/api.php?amount=10&category=9&difficulty=easy&type=multiple")
-    .then(res =>{
+fetch(
+    'https://opentdb.com/api.php?amount=10&category=9&difficulty=easy&type=multiple'
+)
+    .then((res) =>{
         return res.json();
     })
-    .then((loadedQuestions) =>{
-        questions = loadedQuestions.results.map(loadedQuestion => {
+    .then((loadedQuestions) => {
+        questions = loadedQuestions.results.map((loadedQuestion) => {
             const formattedQuestion = {
                 question: loadedQuestion.question,
             };
@@ -31,12 +35,15 @@ fetch("https://opentdb.com/api.php?amount=10&category=9&difficulty=easy&type=mul
             0,
             loadedQuestion.correct_answer
         );
+
         answerChoices.forEach((choice, index) => {
             formattedQuestion['choice' + (index + 1)] = choice;
         });
+
         return formattedQuestion;    
-        });
-    startGame();  
+    });
+    
+        startGame();  
     })
     .catch((err) =>{
         console.error(err);
@@ -46,15 +53,16 @@ startGame = () => {
     questionCounter = 0;
     score = 0;
     availableQuestions = [...questions];
-    console.log(availableQuestions);
     getNewQuestion();
-}
+    game.classList.remove('hidden');
+    loader.classList.add('hidden');
+};
 
 getNewQuestion = () => {
-if(availableQuestions.length === 0 || questionCounter > max_Questions) {
-    localStorage.setItem("mostRecentScore", score);
-    return window.location.assign("/end.html");
-}
+    if(availableQuestions.length === 0 || questionCounter > max_Questions) {
+        localStorage.setItem("mostRecentScore", score);
+        return window.location.assign("/end.html");
+    }
 
     questionCounter++;
     progressText.textContent = `Question ${questionCounter}  /  ${max_Questions}`;
@@ -65,7 +73,7 @@ if(availableQuestions.length === 0 || questionCounter > max_Questions) {
     currentQuestion = availableQuestions[questionIndex];
     question.textContent = currentQuestion.question;
 
-    choices.forEach( choice =>{
+    choices.forEach((choice) => {
         const number = choice.dataset["number"];
         choice.innerText = currentQuestion["choice" + number];
     });
@@ -74,10 +82,10 @@ if(availableQuestions.length === 0 || questionCounter > max_Questions) {
 
     acceptingAnswers = true;
 
-}
+};
 
-choices.forEach(choice => {
-    choice.addEventListener("click", e=> {
+choices.forEach((choice) => {
+    choice.addEventListener("click", (e) => {
         if (!acceptingAnswers) return;
 
         acceptingAnswers = false;
@@ -85,7 +93,7 @@ choices.forEach(choice => {
         const selectedAnswer = selectedChoice.dataset["number"];
 
 
-        const classToApply = selectedAnswer == currentQuestion.answer? "correct" : "incorrect";
+        const classToApply = selectedAnswer == currentQuestion.answer ? "correct" : "incorrect";
         
         if(classToApply === "correct"){
             incrementScore(correct_bonus);
@@ -98,17 +106,13 @@ choices.forEach(choice => {
         setTimeout(() => {
             selectedChoice.parentElement.classList.remove(classToApply);
             getNewQuestion();
-        }, 1000
-        );
-
-
-        
+        }, 1000);
     });
 });
 
-incrementScore = num => {
-    score +=num;
+incrementScore = (num) => {
+    score += num;
     scoreText.textContent = score;
-}
+};
 
-startGame();
+
